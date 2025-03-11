@@ -43,7 +43,7 @@ int main() {
                         single_routine.push_back(temp);
                         temp.clear();
                     }
-                    temp += c;
+                    if(c != ',')temp += c;
                 }
                 single_routine.push_back(temp);
             }
@@ -71,7 +71,8 @@ int main() {
                             start = std::stoi(temp);
                             temp.clear();
                         } else if (end == -1) {
-                            end = std::stoi(temp);
+                            if(temp.empty())end = start;
+                            else end = std::stoi(temp);
                             temp.clear();
                         }
                     }

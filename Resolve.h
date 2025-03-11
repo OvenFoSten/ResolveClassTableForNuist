@@ -83,6 +83,7 @@ std::vector<RowData> resolve() {
                 rowData.SFBKK = row[15];
                 rowData.KCXMMC = row[16];
                 result.push_back(rowData);
+                row.clear();
             }
         }
     }
