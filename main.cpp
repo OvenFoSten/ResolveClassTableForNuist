@@ -7,8 +7,7 @@
 //Configurations
 const auto FIRST_WEEK_MONDAY = Date{2025, 2, 17};
 const std::string TIME_ZONE = "TZID=Asia/Shanghai:";
-const std::string CLASS_TIME_TABLE[23] = {
-        "000000",//index 0 means nothing
+const std::string CLASS_TIME_TABLE[22] = {
         "080000", "084500", "085500", "094000",
         "101000", "105500", "110500", "115000",
         "134500", "143000", "144000", "152500",
@@ -161,8 +160,8 @@ int main() {
                 date.add_day((i - 1) * 7);
                 date.add_day(day_of_week - 1);
 
-                auto start_time_index = start_time;
-                auto end_time_index = end_time;
+                auto start_time_index = (start_time - 1) * 2;
+                auto end_time_index = (end_time - 1) * 2 + 1;
 
                 auto start_TIMESTAMP = TIME_ZONE + date.toTIMESTAMP() + "T" + CLASS_TIME_TABLE[start_time_index];
                 auto end_TIMESTAMP = TIME_ZONE + date.toTIMESTAMP() + "T" + CLASS_TIME_TABLE[end_time_index];
