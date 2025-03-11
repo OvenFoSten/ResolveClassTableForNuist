@@ -4,4 +4,6 @@ project(ResolveClassTable)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(ResolveClassTable main.cpp
-        Resolve.h)
+        Resolve.h
+        Event.h
+        Date.h)
