@@ -18,16 +18,16 @@ struct Event{
     std::string CATEGORY;
 
     std::string serialize() const {
-        std::string result = "BEGIN:VEVENT\n";
-        result += "UID:" + UID + "\n";
-        result += "DTSTAMP:19900101T000000Z\n";
-        result += "DTSTART;" + DTSTART + "\n";
-        result += "DTEND;" + DTEND + "\n";
-        result += "SUMMARY:" + SUMMARY + "\n";
-        result += "DESCRIPTION:" + DESCRIPTION + "\n";
-        result += "LOCATION:" + LOCATION + "\n";
-        result += "CATEGORIES:" + CATEGORY + "\n";
-        result += "END:VEVENT\n";
+        std::string result = "BEGIN:VEVENT\r\n";
+        result += "UID:" + UID + "\r\n";
+        result += "DTSTAMP:19900101T000000Z\r\n";
+        result += "DTSTART;" + DTSTART + "\r\n";
+        result += "DTEND;" + DTEND + "\r\n";
+        result += "SUMMARY:" + SUMMARY + "\r\n";
+        result += "DESCRIPTION:" + DESCRIPTION + "\r\n";
+        result += "LOCATION:" + LOCATION + "\r\n";
+        result += "CATEGORIES:" + CATEGORY + "\r\n";
+        result += "END:VEVENT\r\n";
         return result;
     }
 };

@@ -2,34 +2,43 @@
 #include"Resolve.h"
 #include"Event.h"
 #include"Date.h"
+#include<random>
 
 //Configurations
 const auto FIRST_WEEK_MONDAY = Date{2025, 2, 17};
-const std::string TIME_ZONE = "Asia/Shanghai:";
+const std::string TIME_ZONE = "TZID=Asia/Shanghai:";
 const std::string CLASS_TIME_TABLE[23] = {
-        "00000000",//index 0 means nothing
-        "08000000", "08450000", "08550000", "09400000",
-        "10100000", "10550000", "11050000", "11500000",
-        "13450000", "14300000", "14400000", "15250000",
-        "15550000", "16400000", "16500000", "17350000",
-        "18450000", "19300000", "19400000", "20250000",
-        "20350000", "21200000"
+        "000000",//index 0 means nothing
+        "080000", "084500", "085500", "094000",
+        "101000", "105500", "110500", "115000",
+        "134500", "143000", "144000", "152500",
+        "155500", "164000", "165000", "173500",
+        "184500", "193000", "194000", "202500",
+        "203500", "212000"
 };
 
 
 int main() {
+    size_t uid_offset = 0;
     auto data = resolve();
     std::cout << "[INFO]\t Data Size: " << data.size() << std::endl;
     std::string result;
     //Header
-    result += "BEGIN:VCALENDAR\n";
-    result += "VERSION:2.0\n";
-    result += "PRODID:-//NAME//EN\n";
-    result += "CALSCALE:GREGORIAN\n";
+    result += "BEGIN:VCALENDAR\r\n";
+    result += "VERSION:2.0\r\n";
+    result += "PRODID:-//NAME//EN\r\n";
+    result += "CALSCALE:GREGORIAN\r\n";
+    result += "BEGIN:VTIMEZONE\r\n";
+    result += "TZID:Asia/Shanghai\r\n";
+    result += "BEGIN:STANDARD\r\n";
+    result += "TZOFFSETFROM:+0800\r\n";
+    result += "TZOFFSETTO:+0800\r\n";
+    result += "TZNAME:CST\r\n";
+    result += "END:STANDARD\r\n";
+    result += "END:VTIMEZONE\r\n";
 
     for (auto &row: data) {
         auto event = Event{};
-        event.UID = row.course_uid + "@class.com";
         std::vector<std::vector<int>> routines;
         //start,end,all/odd/even(0/1/2)
         {
@@ -43,7 +52,7 @@ int main() {
                         single_routine.push_back(temp);
                         temp.clear();
                     }
-                    if(c != ',')temp += c;
+                    if (c != ',')temp += c;
                 }
                 single_routine.push_back(temp);
             }
@@ -71,7 +80,7 @@ int main() {
                             start = std::stoi(temp);
                             temp.clear();
                         } else if (end == -1) {
-                            if(temp.empty())end = start;
+                            if (temp.empty())end = start;
                             else end = std::stoi(temp);
                             temp.clear();
                         }
@@ -159,10 +168,12 @@ int main() {
                 auto end_TIMESTAMP = TIME_ZONE + date.toTIMESTAMP() + "T" + CLASS_TIME_TABLE[end_time_index];
 
                 //Construct event
+                event.UID = row.course_uid + std::to_string(uid_offset) + "@class.com";
+                ++uid_offset;
                 event.DTSTART = start_TIMESTAMP;
                 event.DTEND = end_TIMESTAMP;
                 event.SUMMARY = row.course_name;
-                event.DESCRIPTION = "Teachers: " + teachers;
+                event.DESCRIPTION = teachers;
                 event.LOCATION = location;
                 event.CATEGORY = is_lab_course ? "Lab" : "Lecture";
 
@@ -174,7 +185,7 @@ int main() {
     }
 
     //Footer
-    result += "END:VCALENDAR\n";
+    result += "END:VCALENDAR\r\n";
 
     std::ofstream file("output.ics");
     file << result;
